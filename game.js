@@ -113,6 +113,10 @@ function flipCard(event){
     }
 
     function flipCard(event){
+        if(cardsMatched==15){
+            alert('restart the game to start a new one');
+            return;
+        }
         let id = event.target.id;
         if( flipped.findIndex((element) => element.id==id) >= 0)
             return;
@@ -130,6 +134,12 @@ function flipCard(event){
         }
         movesDisplay.html(" " + (++cardsFlipped));
         console.log(flipped);
+<<<<<<< HEAD
+>>>>>>> EX4
+=======
+        if(cardsMatched==15){
+            alert('u won the game !!');
+        }
 >>>>>>> EX4
 
     }
