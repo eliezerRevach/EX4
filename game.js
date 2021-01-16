@@ -69,6 +69,10 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function flipCard(event){
+        if(cardsMatched==15){
+            alert('restart the game to start a new one');
+            return;
+        }
         let id = event.target.id;
         if( flipped.findIndex((element) => element.id==id) >= 0)
             return;
@@ -86,6 +90,9 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         movesDisplay.html(" " + (++cardsFlipped));
         console.log(flipped);
+        if(cardsMatched==15){
+            alert('u won the game !!');
+        }
 
     }
     function flipFront(i){
