@@ -46,16 +46,18 @@ function loadGame(){
     $("#re-btn").click(restartGame);
     shuffle(cardArray);
     createBoard();
+    scoreDisplay.html(" "+cardsMatched);
+    movesDisplay.html(" "+cardsFlipped);
 }
 
   //create your board
-  function createBoard() {
+function createBoard() {
     for (let i = 0; i < cardArray.length; i++) {
         let card = $('<img />', { 
             id: ''+i,
             src: "images/back.jpg",
-            class: 'card card-back',
-            alt: 'MyAlt'
+            class: 'card',
+            alt: cardArray[i].name
         });
         card.click(flipCard);
         deck.append(card);
@@ -63,15 +65,14 @@ function loadGame(){
 }
 
 function restartGame(){
-    alert("restart");
+    location.reload()
 }
 
 function flipCard(event){
     let id = event.target.id;
-    if( flipped.findIndex((f) => f.id==id) > 0)
+    if( flipped.findIndex((element) => element.id==id) >= 0)
         return;
-    
-    if(flipped.length < maxFlipped)  
+    else if(flipped.length < maxFlipped)  
         flipFront(id);
 
     else if(flipped.length  ==  maxFlipped){
@@ -81,6 +82,7 @@ function flipCard(event){
             flipped.pop();
         flipFront(id);
     }
+    movesDisplay.html(" " + (++cardsFlipped));
     console.log(flipped);
 
 }
