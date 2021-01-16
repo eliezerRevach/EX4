@@ -34,35 +34,14 @@ document.addEventListener("DOMContentLoaded", () => {
     ];
     const maxFlipped = 2;
     let flipped = [];
-
     let cardsMatched = 0;
     let cardsFlipped = 0;
     let scoreDisplay = $('#scoreNum');
     let movesDisplay= $('#movesNum');
-
     let deck = $('#deck');
+    let modal = $(".popup")
+    let closeicon = $(".close");
 
-<<<<<<< HEAD
-function loadGame(){
-    $("#re-btn").click(restartGame);
-    shuffle(cardArray);
-    createBoard();
-    scoreDisplay.html(" "+cardsMatched);
-    movesDisplay.html(" "+cardsFlipped);
-}
-
-  //create your board
-function createBoard() {
-    for (let i = 0; i < cardArray.length; i++) {
-        let card = $('<img />', { 
-            id: ''+i,
-            src: "images/back.jpg",
-            class: 'card',
-            alt: cardArray[i].name
-        });
-        card.click(flipCard);
-        deck.append(card);
-=======
     function loadGame(){
         $("#re-btn").click(restartGame);
         shuffle(cardArray);
@@ -71,10 +50,9 @@ function createBoard() {
         movesDisplay.html(" "+cardsFlipped);
     }
 
-    //create your board
-    function createBoard() {
+    function createBoard(){
         for (let i = 0; i < cardArray.length; i++) {
-            let card = $('<img />', {
+            let card = $('<img />', { 
                 id: ''+i,
                 src: "images/back.jpg",
                 class: 'card',
@@ -83,48 +61,30 @@ function createBoard() {
             card.click(flipCard);
             deck.append(card);
         }
->>>>>>> EX4
     }
 
-<<<<<<< HEAD
-function restartGame(){
-    location.reload()
-}
-
-function flipCard(event){
-    let id = event.target.id;
-    if( flipped.findIndex((element) => element.id==id) >= 0)
-        return;
-    else if(flipped.length < maxFlipped)  
-        flipFront(id);
-
-    else if(flipped.length  ==  maxFlipped){
-        for(let i=0; i< maxFlipped ; i++)
-            flipBack(flipped[i].id);
-        for(let i=0; i< maxFlipped ; i++)
-            flipped.pop();
-        flipFront(id);
-    }
-    movesDisplay.html(" " + (++cardsFlipped));
-    console.log(flipped);
-=======
     function restartGame(){
         location.reload()
     }
 
     function flipCard(event){
-        if(cardsMatched==15){
-            alert('restart the game to start a new one');
-            return;
-        }
         let id = event.target.id;
         if( flipped.findIndex((element) => element.id==id) >= 0)
             return;
-        else if(flipped.length < maxFlipped)
+        else if(flipped.length < maxFlipped){
             flipFront(id);
+            
+            if((flipped.length  ==  maxFlipped) && checkForMatch()){ // a match!
+                scoreDisplay.html(" " + (++cardsMatched));
+                for (let i = 0; i < maxFlipped; i++)
+                    $('#'+flipped[i].id).unbind();
 
+                if(cardsMatched == 15)
+                    congratulations();
+            }
+        }
         else if(flipped.length  ==  maxFlipped){
-            if(checkForMatch()==false) {
+            if(!checkForMatch()){
                 for (let i = 0; i < maxFlipped; i++)
                     flipBack(flipped[i].id);
             }
@@ -133,25 +93,38 @@ function flipCard(event){
             flipFront(id);
         }
         movesDisplay.html(" " + (++cardsFlipped));
-        console.log(flipped);
-<<<<<<< HEAD
->>>>>>> EX4
-=======
-        if(cardsMatched==15){
-            alert('u won the game !!');
-        }
->>>>>>> EX4
 
     }
+
     function flipFront(i){
         $('#'+i).attr("src", cardArray[i].img);
         flipped.push({"name": cardArray[i].name, "id": i});
     }
+
     function flipBack(i){
         $('#'+i).attr("src", "images/back.jpg");
     }
 
-// Fisher-Yates (aka Knuth) Shuffle
+    function checkForMatch() {
+        let name = flipped[0].name; 
+        if(flipped.every((element)=> element.name == name)){  //all flipped match
+            return true;
+        }
+        return false;
+    }
+    function congratulations() {
+        modal.addClass("show");
+        closeModal();
+    }
+
+    function closeModal(){
+        closeicon.click(function(e){
+            modal.removeClass("show");
+            restartGame();
+        });
+    }
+
+    // Fisher-Yates (aka Knuth) Shuffle
     function shuffle(array) {
         var currentIndex = array.length, temporaryValue, randomIndex;
         while (currentIndex !== 0) {
@@ -163,18 +136,7 @@ function flipCard(event){
         }
         return array;
     }
-    function checkForMatch() {
-        if(flipped[0].id==flipped[1].id){
-            alert('same card!');
-            return false;
-        }
-        else if(flipped[0].name==flipped[1].name){
-            alert('found match');
-            scoreDisplay.html(" " + (++cardsMatched));
-            return true;
-        }
-        return false;
-    }
+
     loadGame();
 
 });
