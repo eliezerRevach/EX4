@@ -32,13 +32,15 @@ let cardArray = [
     { name: "pic15", img: "images/pic15.jpg", },
     { name: "pic15", img: "images/pic15.jpg", },
     ]; 
-const numOfRows = 5;
-const numOfColumns = 6;
+const maxFlipped = 2;
+let flipped = [];
+
 let cardsMatched = 0;
 let cardsFlipped = 0; 
-let scoreDisplay = $('#scoreNum')
-let movesDisplay= $('#movesNum')
-let deck = $('#deck')
+let scoreDisplay = $('#scoreNum');
+let movesDisplay= $('#movesNum');
+
+let deck = $('#deck');
 
 function loadGame(){
     $("#re-btn").click(restartGame);
@@ -65,10 +67,29 @@ function restartGame(){
 }
 
 function flipCard(event){
-    let index = event.target.id;
-    $('#'+index).attr("src", cardArray[index].img);
-    let name = a
-    if()
+    let id = event.target.id;
+    if( flipped.findIndex((f) => f.id==id) > 0)
+        return;
+    
+    if(flipped.length < maxFlipped)  
+        flipFront(id);
+
+    else if(flipped.length  ==  maxFlipped){
+        for(let i=0; i< maxFlipped ; i++)
+            flipBack(flipped[i].id);
+        for(let i=0; i< maxFlipped ; i++)
+            flipped.pop();
+        flipFront(id);
+    }
+    console.log(flipped);
+
+}
+function flipFront(i){
+    $('#'+i).attr("src", cardArray[i].img);
+    flipped.push({"name": cardArray[i].name, "id": i});
+}
+function flipBack(i){
+    $('#'+i).attr("src", "images/back.jpg");
 }
 
 // Fisher-Yates (aka Knuth) Shuffle
